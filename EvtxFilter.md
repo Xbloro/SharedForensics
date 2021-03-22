@@ -23,3 +23,16 @@ and *[EventData[Data[@Name='TargetUserName'] and (Data='administrtator')]]
 and *[System[TimeCreated[@SystemTime'] &gt;= '1970-01-01T18:20:000Z']]
 and *[System[TimeCreated[@SystemTime'] &lt;= '1970-03-01T23:39:000Z']]
 ```
+
+## Search For IP
+```xml
+<QueryList>
+  <Query Id="0" Path="file://C:\Users\Hugo\Desktop\SecurityWin10.evtx">
+
+    <Select Path="file://C:\Users\Hugo\Desktop\SecurityWin10.evtx">
+*[EventData[Data[@Name='IpAddress'] and(Data='192.168.xx.xx')]]
+</Select>
+
+  </Query>
+</QueryList>
+```
