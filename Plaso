@@ -1,5 +1,19 @@
 
 
+## Timeline
+
+### Creating a supertimeline with **log2timeline** from an image disk
+```bash
+# Creating the bodyfile
+log2timeline.py <timeline.plaso> <disk_image.E01>
+
+# Making the plaso readable (csv) and filtering by date (from 01/12/2020 00:00 to 31/12/2020 00:00)
+psort.py -z "UCT" -o l2tcsv <timeline.plaso> "date > '2020-12-01 00:00:00' AND date < '2020-12-31 00:00:00'" -w <timeline.csv>
+```
+
+
+## Sort all failled Connexion by IP and sort them by number
+
 ```bash
 log2timeline.py mus.sec.evtx.l2t securityevt/*
 
