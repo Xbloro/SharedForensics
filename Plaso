@@ -1,0 +1,18 @@
+
+
+```bash
+log2timeline.py mus.sec.evtx.l2t securityevt/*
+
+*psort.py -o l2tcsv -w mus.sec.evtx.csv mus.sec.evtx.l2t*
+
+Total Failed Logons: *grep “EventID>4625” mus.sec.evtx.csv | wc -l* 
+
+Top Failed Accounts: *grep  “EventID>4625″ mus.sec.evtx.csv | awk -F”xml_string: ” ‘{print $2}’ | awk -F”TargetUserName\”>” ‘{print $2}’ | awk -F”<” ‘{print $1}’ | sort | uniq -c | sort -n -r | head*
+
+Top Failed Logon Accounts: *grep “EventID>4625″ mus.sec.evtx.csv | awk -F”xml_string: ” ‘{print $2}’ | awk -F”LogonType\”>” ‘{print $2}’ | awk -F”<” ‘{print $1}’ | sort | uniq -c | sort -n -r | head*
+
+Top Failed IP Address Origins:
+ *grep “EventID>4625″  mus.sec.evtx.csv | awk -F”xml_string: ” ‘{print $2}’ | awk  -F”IpAddress\”>” ‘{print $2}’ | awk -F”<” ‘{print $1}’ | sort |  uniq -c | sort -n -r | head*
+
+Top Dates With Failed Logons: *grep  “EventID>4625″ mus.sec.evtx.csv | awk -F”xml_string: ” ‘{print $2}’ | awk -F”TimeCreated SystemTime=\”” ‘{print $2}’ | awk -F”T” ‘{print $1}’ | sort | uniq -c | sort -n -r | head
+```
