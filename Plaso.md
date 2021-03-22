@@ -12,7 +12,7 @@ psort.py -z "UCT" -o l2tcsv <timeline.plaso> "date > '2020-12-01 00:00:00' AND d
 ```
 
 
-## Sort all failled Connexion by IP and sort them by number
+## Sort all failled connections by IP and sort them by number of failled attempt
 
 ```bash
 log2timeline.py mus.sec.evtx.l2t securityevt/*
