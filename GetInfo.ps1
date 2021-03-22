@@ -1,6 +1,23 @@
 
+<### Feel free improve this script
+Made by Xbloro
 
+This script gather computeur info and write them to files
+Must be run as Admin
+Artefact collected : 
+system info ;
+TimeZone;
+users info ;
+firewall info ; 
+Startup info ; 
+Schedudle tasks;
+UAC.
 
+ARGS : -PathToOutput: the path to output
+Example : C:\user\Hugo\Desktop\Getinfo.ps1 -pathToOutput . 
+It will write the results in the curent directory.
+
+#>
 ##################################################################
 ####################### Main Menu ##################
 
