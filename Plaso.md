@@ -15,34 +15,34 @@ psort.py -z "UCT" -o l2tcsv <timeline.plaso> "date > '2020-12-01 00:00:00' AND d
 ## Sort all failled connections by IP and sort them by number of failled attempt
 
 ```bash
-log2timeline.py mus.sec.evtx.l2t securityevt/*
+log2timeline.py mus.sec.evtx.l2t securityevt/
 ```
 
 ```bash
-*psort.py -o l2tcsv -w mus.sec.evtx.csv mus.sec.evtx.l2t*
+psort.py -o l2tcsv -w mus.sec.evtx.csv mus.sec.evtx.l2t
 ```
 
 ### Total Failed Logons: 
 
 ```bash
-grep “EventID>4625” mus.sec.evtx.csv | wc -l* 
+grep “EventID>4625” mus.sec.evtx.csv | wc -l
 ```
 
 ### Top Failed Accounts: 
 
 ```bash
-grep  “EventID>4625″ mus.sec.evtx.csv | awk -F”xml_string: ” ‘{print $2}’ | awk -F”TargetUserName\”>” ‘{print $2}’ | awk -F”<” ‘{print $1}’ | sort | uniq -c | sort -n -r | head*
+grep  “EventID>4625″ mus.sec.evtx.csv | awk -F”xml_string: ” ‘{print $2}’ | awk -F”TargetUserName\”>” ‘{print $2}’ | awk -F”<” ‘{print $1}’ | sort | uniq -c | sort -n -r | head
 ```
 
 ### Top Failed Logon Accounts: 
 
 ```bash
-grep “EventID>4625″ mus.sec.evtx.csv | awk -F”xml_string: ” ‘{print $2}’ | awk -F”LogonType\”>” ‘{print $2}’ | awk -F”<” ‘{print $1}’ | sort | uniq -c | sort -n -r | head*
+grep “EventID>4625″ mus.sec.evtx.csv | awk -F”xml_string: ” ‘{print $2}’ | awk -F”LogonType\”>” ‘{print $2}’ | awk -F”<” ‘{print $1}’ | sort | uniq -c | sort -n -r | head
 ```
 
 ### Top Failed IP Address Origins:
 ```bash
- grep “EventID>4625″  mus.sec.evtx.csv | awk -F”xml_string: ” ‘{print $2}’ | awk  -F”IpAddress\”>” ‘{print $2}’ | awk -F”<” ‘{print $1}’ | sort |  uniq -c | sort -n -r | head*
+ grep “EventID>4625″  mus.sec.evtx.csv | awk -F”xml_string: ” ‘{print $2}’ | awk  -F”IpAddress\”>” ‘{print $2}’ | awk -F”<” ‘{print $1}’ | sort |  uniq -c | sort -n -r | head
 ```
 
 ### Top Dates With Failed Logons: 
