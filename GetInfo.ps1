@@ -2,6 +2,14 @@
 <### Feel free improve this script
 Made by Xbloro
 
+To enable search function : 
+create a folder name "conf" in the same dir as the script
+create a file name checkItemAbsolute.txt and put it in conf folder
+create a file name searchItem.txt and put it in conf folder
+
+in check item specify full path of thing to search ex : C:\users\X\file.txt
+in searchItem.txt specify juste the name of the file to look for ex : file.txt
+
 This script gather computeur info and write them to files
 Must be run as Admin
 Artefact collected : 
@@ -14,7 +22,8 @@ Schedudle tasks;
 UAC.
 
 ARGS : -PathToOutput: the path to output
-Example : C:\user\Hugo\Desktop\Getinfo.ps1 -pathToOutput . 
+-pathToSearch : the path to look for files
+Example : C:\user\Hugo\Desktop\Getinfo.ps1 -pathToOutput . -pathToSearch "C:\"
 It will write the results in the curent directory.
 
 #>
