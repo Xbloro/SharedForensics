@@ -16,9 +16,11 @@ system info ;
 TimeZone;
 users info ;
 firewall info ; 
+Windefender info ;
 Startup info ; 
 Schedudle tasks;
-UAC.
+Gather Windows Logs ;
+UAC Infos.
 
 -pathToSearch : the path to look for files
 Example : C:\user\Hugo\Desktop\Getinfo.ps1 -pathToOutput . -pathToSearch "C:\" 
@@ -32,12 +34,40 @@ It will write the results in the curent directory.
 
 param(
 
-    [Parameter(Mandatory)]
-    [String]$PathToOutput,
-    [Parameter(Mandatory)]
-    [String]$pathToSearch
+    [Parameter()]
+    [String]$PathToOutput = ".",
+    [Parameter()]
+    [String]$pathToSearch = ".",
+    [Parameter()]
+    [switch]$Menu,
+    [Parameter()]
+    [switch]$A,
+    [Parameter()]
+    [switch]$H
 ) #Must be t
 
+
+function Write-Help {
+
+    Write-Host "#################### Args ###################### " -ForegroundColor Green
+    Write-Host " args -PathToOutput the destination folder, default is current"
+    Write-Host " args -PathToSearch the path to look for file , default is current"
+    Write-Host " args -A to perform all actions"
+    Write-Host " args -Menu to go to an interactive menu"
+    Write-Host " args -H to go show this Help"
+    Write-Host "################################################# "-ForegroundColor Green
+    Write-Host "#################### Info ###################### "-ForegroundColor Blue
+    Write-Host "Artefact collected : system info; TimeZone; users info; firewall info;  Windefender info; Startup info; Schedudle tasks; Gather Windows Logs; UAC Infos."
+    Write-Host "Search file specified in the conf folder "
+    Write-Host "################################################# " -ForegroundColor blue
+    Write-Host "To enable search function : "
+    Write-Host " - create a folder name 'conf' in the same dir as the script"
+    Write-Host " - create a file name checkItemAbsolute.txt and put it in conf folder"
+    Write-Host " - create a file name searchItem.txt and put it in conf folder"
+    Write-Host " - in check item specify full path of thing to search ex : C:\users\X\file.txt"
+    Write-Host " - in searchItem.txt specify juste the name of the file to look for ex : file.txt"
+    Write-Host "################################################# " -ForegroundColor Green
+}
 
 function Get-sysInfo {
     param(
@@ -248,6 +278,60 @@ function Search-ElementFromFile {
 }
 
 
+function Get-DefenderInfo {
+    param(
+    [Parameter(Mandatory)]
+    [String]$PathToOutput
+    ) #Must be t
+
+    $EndFolder = "WinDefender"
+    $FinalPath = Join-Path -Path $PathToOutput -childPath $EndFolder
+    If(!(test-path $FinalPath))
+    {
+          New-Item -ItemType Directory -Force -Path $FinalPath 
+    } 
+    $EndFileName = Join-Path -Path $FinalPath -childPath "DefenderInfo.txt"
+    Get-MpComputerStatus | Out-File -FilePath $EndFileName -Append
+    $EndFileName = Join-Path -Path $FinalPath -childPath "DefenderPreferences.txt"
+    Get-MpPreference | Out-File -FilePath $EndFileName -Append
+    $EndFileName = Join-Path -Path $FinalPath -childPath "DefenderThreatDetections.txt"
+    Get-MpThreatDetection | Out-File -FilePath $EndFileName -Append
+    $EndFileName = Join-Path -Path $FinalPath -childPath "DefenderThreat.txt"
+    Get-MpThreat | Out-File -FilePath $EndFileName -Append
+     
+}
+
+
+function Get-WinEventLogs {
+    param(
+    [Parameter(Mandatory)]
+    [String]$PathToOutput
+    ) #Must be t
+
+    $EndFolder = "WinEvents"
+    $FinalPath = Join-Path -Path $PathToOutput -childPath $EndFolder
+    If(!(test-path $FinalPath))
+    {
+          New-Item -ItemType Directory -Force -Path $FinalPath 
+    } 
+
+    Copy-Item -Path "C:\WINDOWS\System32\Winevt\Logs\" -Destination $FinalPath -Recurse
+    Compress-Archive -Path $FinalPath"\Logs\*" -DestinationPath "WinEvents\Logs.zip"
+    Remove-Item -Path $FinalPath"\Logs" -Force -Recurse -Confirm:$false
+}
+function CompressResults {
+    param(
+        [Parameter(Mandatory)]
+        [String]$PathToOutput
+        ) #Must be t
+
+    $machineName = HOSTNAME
+    $EndFileName = Join-Path -Path $PathToOutput -childPath $machineName".zip"
+
+    Get-ChildItem -Path $PathToOutput -Exclude *.ps1, conf | Compress-Archive -DestinationPath $EndFileName
+    Get-ChildItem -Path $PathToOutput -Exclude *.ps1, conf,*.zip -Directory | Remove-Item -Force -Recurse -Confirm:$false 
+}
+
 function Do_All {
     param(
     [Parameter(Mandatory)]
@@ -256,7 +340,7 @@ function Do_All {
     [String]$pathToSearch
     
     ) #Must be t
-    
+
     Get-AllUsersInfo -PathToOutput $PathToOutput
     Get-FirewallInfo -PathToOutput $PathToOutput
     Get-startupInfo -PathToOutput $PathToOutput
@@ -265,16 +349,63 @@ function Do_All {
     Get-ScheduledTasks  -PathToOutput $PathToOutput
     Search-ElementAbsolute -PathToOutput $PathToOutput
     Search-ElementFromFile -PathToOutput $PathToOutput -Path $pathToSearch
+    Get-DefenderInfo -PathToOutput $PathToOutput
+    Get-WinEventLogs -PathToOutput $PathToOutput
+    CompressResults -PathToOutput $PathToOutput
+    Clear-Host
+    Write-Host "All action have been performed " -ForegroundColor Green
 }
 
-Do_All -PathToOutput $PathToOutput -pathToSearch $pathToSearch
+function Show-Menu {
+    param (
+        [string]$Title = 'PowerGatherForensics'
+    )
+    Clear-Host
+    Write-Host "================ $Title ================"
+    
+    Write-Host "1: Press '1' for All options"
+    Write-Host "2: Press '2' to search for files"
+    Write-Host "3: Press '3' for this option."
+    Write-Host "Q: Press 'Q' to quit."
+}
+ function Do_Menu {
+
+     do
+     {
+        Show-Menu
+        $selection = Read-Host "Please make a selection"
+        switch ($selection)
+        {
+        '1' {
+            Do_All -PathToOutput $PathToOutput -pathToSearch $pathToSearch
+        } '2' {
+            Search-ElementAbsolute -PathToOutput $PathToOutput
+            Search-ElementFromFile -PathToOutput $PathToOutput -Path $pathToSearch
+        } '3' {
+          'You chose option #3'
+        }
+        }
+        pause
+     }
+     until ($selection -eq 'q')
+ }
+
+
+############################## MAIN ###########################################################
+
+if($Menu){ Do_Menu}
+elseif($A){ Do_All -PathToOutput $PathToOutput -pathToSearch $pathToSearch}
+elseif($H){ Write-Help}
+else{Write-Help}
+
+
+
+#################################################################################################
+<# to do
 
 
 
 
-
-
-<#
 function Search-ElementFromName {
     param (
         [Parameter(Mandatory)]
@@ -300,3 +431,4 @@ function Search-ElementFromName {
         }
 }    
 #>
+
