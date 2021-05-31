@@ -1,5 +1,39 @@
 # VM Conversion
 
+## VMDK to RAW
+Même chose pour un VDI
+```
+VBoxManage clonehd <file.vmdk> <file.raw> --format RAW
+```
+ou
+```
+qemu-img convert -f vmdk -O raw image.vmdk image.img
+```
+
+## VMDK to VDI
+```
+VBoxManage clonehd --format VDI <file.vmdk> <file.vdi>
+```
+ou
+```
+qemu-img convert -f vmdk -O vdi <file.vmdk> <file.vdi>
+```
+
+## RAW to VMDK
+Mêmme chose pour un VDI
+```
+VBoxManage convertdd <file.raw> <file.vmdk> --format VMDK
+```
+ou
+```
+qemu-img convert -f raw -O vmdk <file.img> <file.vmdk>
+```
+
+## HDS to DD (Parallels format)
+```
+qemu-img convert -f parallels -O raw <file.hds> <file.dd>
+```
+
 ## VMA.LZO to RAW (Proxmox format)
 
 Décompresser le fichier 
