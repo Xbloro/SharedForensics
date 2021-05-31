@@ -1,4 +1,4 @@
-# VM Convertion
+# VM Conversion
 
 ## VMA.LZO to RAW (Proxmox format)
 
