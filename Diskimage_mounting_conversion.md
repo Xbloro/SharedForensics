@@ -35,7 +35,7 @@ qemu-img convert -f parallels -O raw <file.hds> <file.dd>
 ```
 
 ## VMA.LZO to RAW (Proxmox format)
-
+Liste des paquets nécessaires : https://www.liberasys.com/wiki/doku.php?id=proxmox-extract-backup:proxmox_extract_backup
 Décompresser le fichier 
 ```
 lzop -x <file.vma.lzop>
