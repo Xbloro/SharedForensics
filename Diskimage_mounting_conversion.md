@@ -55,3 +55,4 @@ Convertir le RAW en VID (si besoin)
 ```
 qemu-img convert -p -f raw -O vdi <file.raw> <file.vdi>
 ```
+
