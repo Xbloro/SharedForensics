@@ -1,0 +1,12 @@
+# VMA.LZO to RAW (Proxmox format)
+
+Décompresser le fichier 
+```
+lzop -x <file.vma.lzop>
+```
+
+Lister les fichiers
+```
+vma list <file.vma>
+```
+
