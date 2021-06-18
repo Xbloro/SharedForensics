@@ -39,7 +39,7 @@ Liste des paquets nécessaires : https://www.liberasys.com/wiki/doku.php?id=prox
 
 Décompresser le fichier 
 ```
-lzop -x <file.vma.lzop>
+lzop -x <file.vma.lzo>
 ```
 
 Lister les fichiers
@@ -52,7 +52,7 @@ Extraire les fichiers dans le répertoire voulu
 vma extract -v <file.vma> <dir>
 ```
 
-Convertir le RAW en VID (si besoin)
+Convertir le RAW en VDI (si besoin)
 ```
 qemu-img convert -p -f raw -O vdi <file.raw> <file.vdi>
 ```
